@@ -1,0 +1,37 @@
+# Oki's development appliance, a Lima instance made and provisioned by start.sh.
+# The image is image/manifest.json's base.image; keep the two the same. It is Debian's `generic`
+# image. The host folder is shared over virtiofs, the share the boot check runs on.
+
+vmType: qemu
+arch: x86_64
+# A fixed size, so the free space spores see is real and what Oki can take from the host is known.
+disk: 20GiB
+images:
+  - location: https://cloud.debian.org/images/cloud/trixie/20261103-2651/debian-13-generic-amd64-20261103-2651.qcow2
+    arch: x86_64
+    digest: sha512:1207e6e3efaff8ee77ab7a32c156a3eea6a9e53f94cfc48efbd1f49ba554ca36ac62ab27395aa813a1775a8c0a393b1a1ce5377d9e5670f6113e3110c57fee4b
+
+# uid 1000 is the appliance's own user, oki.
+user:
+  uid: 1001
+
+mountType: virtiofs
+mounts:
+  - location: ~/Documents/Oki
+    mountPoint: /folders
+    writable: true
+
+containerd:
+  system: false
+  user: false
+
+portForwards:
+  # the management service
+  - guestIP: 127.0.0.1
+    guestPort: 7760
+    hostIP: 127.0.0.1
+    hostPort: 7760
+  - guestIP: 0.0.0.0
+    proto: any
+    guestPortRange: [1, 65535]
+    ignore: true

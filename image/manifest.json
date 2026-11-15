@@ -1,0 +1,45 @@
+{
+  "release": "0.2.1",
+  "dataSchema": 1,
+  "arch": "x86_64",
+  "base": {
+    "distribution": "debian 13",
+    "image": "https://cloud.debian.org/images/cloud/trixie/20261103-2651/debian-13-generic-amd64-20261103-2651.qcow2",
+    "digest": "sha512:1207e6e3efaff8ee77ab7a32c156a3eea6a9e53f94cfc48efbd1f49ba554ca36ac62ab27395aa813a1775a8c0a393b1a1ce5377d9e5670f6113e3110c57fee4b",
+    "wsl": {
+      "image": "https://salsa.debian.org/debian/WSL/-/jobs/10481389/artifacts/raw/Debian_WSL_AMD64_v1.27.0.0.wsl",
+      "digest": "sha256:57cb56f9b7fbac86c9089d3c798765c0d31eb418705e74bad88668f6e95091cd"
+    },
+    "recorded": {
+      "sources": "/opt/oki/apt-policy.txt",
+      "packages": "/opt/oki/dpkg.txt",
+      "npm": "/opt/oki/package-lock.json"
+    }
+  },
+  "node": {
+    "version": "v24.22.2",
+    "tarball": "node-v24.22.2-linux-x64.tar.xz",
+    "sha256": "48cc0e21e048790e54c0cf5749c2725005313d652651c40b7a21feb9697aaf75"
+  },
+  "spore": "1.66.0",
+  "mohdel": "4.11.0",
+  "pluginWeb": {
+    "version": "0.2.2",
+    "sha256": "1bec6bd868b724f580c974f64e8bea55e0c88ccf5abe0abc7f59d7f4f21ae9d1"
+  },
+  "management": "0.6.1",
+  "curated": "https://mohdex.dev/v1",
+  "services": {
+    "management": {
+      "unit": "oki-management.service",
+      "listen": "127.0.0.1:7760"
+    },
+    "connector": {
+      "unit": "spore-web@oki.service",
+      "listen": "127.0.0.1:7761"
+    },
+    "tick": {
+      "unit": "spore-tick.timer"
+    }
+  }
+}

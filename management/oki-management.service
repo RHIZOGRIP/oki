@@ -1,0 +1,10 @@
+[Unit]
+Description=oki-management: the one address Oki's browser page opens
+
+[Service]
+ExecStart="/usr/local/bin/node" "/opt/oki/node_modules/@rhizogrip/oki-management/bin/oki-management.js" "/opt/oki/manifest.json"
+Restart=on-failure
+RestartPreventExitStatus=2
+
+[Install]
+WantedBy=default.target

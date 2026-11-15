@@ -1,0 +1,73 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: oki
+
+      - name: Read the manifest
+        id: manifest
+        run: |
+          echo "release=$(jq -er .release oki/image/manifest.json)" >> "$GITHUB_OUTPUT"
+          echo "web=$(jq -er .pluginWeb.version oki/image/manifest.json)" >> "$GITHUB_OUTPUT"
+          echo "node=$(jq -er .node.version oki/image/manifest.json)" >> "$GITHUB_OUTPUT"
+
+      - name: The tag names the manifest's release
+        run: test "$GITHUB_REF_NAME" = "v${{ steps.manifest.outputs.release }}"
+
+      - uses: actions/checkout@v4
+        with:
+          repository: RHIZOGRIP/spore-plugin-web
+          ref: v${{ steps.manifest.outputs.web }}
+          fetch-depth: 0
+          path: plugin-web
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.manifest.outputs.node }}
+
+      - name: Install makensis and minisign
+        run: sudo apt-get update -q && sudo apt-get install -yq --no-install-recommends nsis minisign
+
+      - name: Test the management service
+        working-directory: oki/management
+        run: npm ci --no-audit --no-fund && npm test
+
+      - name: Build the release
+        run: oki/image/release.sh "$RUNNER_TEMP/oki-${{ steps.manifest.outputs.release }}"
+
+      - name: Checksums and their signature
+        working-directory: ${{ runner.temp }}
+        env:
+          MINISIGN_SECRET_KEY: ${{ secrets.MINISIGN_SECRET_KEY }}
+        run: |
+          sha256sum "oki-${{ steps.manifest.outputs.release }}.exe" "oki-${{ steps.manifest.outputs.release }}-linux.tar.gz" "oki-${{ steps.manifest.outputs.release }}.zip" > SHA256SUMS
+          cat SHA256SUMS
+          printf '%s\n' "$MINISIGN_SECRET_KEY" > minisign.key
+          minisign -S -s minisign.key -m SHA256SUMS -t "Oki ${{ steps.manifest.outputs.release }}"
+          rm minisign.key
+          minisign -V -p "$GITHUB_WORKSPACE/oki/image/release.pub" -m SHA256SUMS
+
+      - name: This release's notes, from CHANGELOG.md
+        run: |
+          awk -v at="## ${{ steps.manifest.outputs.release }}" '$0 == at { on = 1; next } /^## / { on = 0 } on' oki/CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+          grep -q '[^[:space:]]' "$RUNNER_TEMP/notes.md" || { echo "CHANGELOG.md has no section '## ${{ steps.manifest.outputs.release }}'"; exit 1; }
+          cat "$RUNNER_TEMP/notes.md"
+
+      - name: Publish the release
+        working-directory: ${{ runner.temp }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag --title "Oki ${{ steps.manifest.outputs.release }}" --notes-file notes.md \
+            "oki-${{ steps.manifest.outputs.release }}.exe" "oki-${{ steps.manifest.outputs.release }}-linux.tar.gz" "oki-${{ steps.manifest.outputs.release }}.zip" SHA256SUMS SHA256SUMS.minisig

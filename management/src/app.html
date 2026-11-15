@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <script>
+      try {
+        const chosen = window.localStorage.getItem('spore-mode')
+        if (chosen === 'light' || chosen === 'dark') document.documentElement.dataset.theme = chosen
+      } catch (err) {
+        console.warn('the colour scheme chosen on the chat could not be read', err)
+      }
+    </script>
+    %sveltekit.head%
+  </head>
+  <body data-sveltekit-reload>
+    <div style="display: contents">%sveltekit.body%</div>
+  </body>
+</html>

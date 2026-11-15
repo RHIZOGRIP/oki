@@ -1,0 +1,37 @@
+{
+  "name": "@rhizogrip/oki-management",
+  "version": "0.6.1",
+  "private": true,
+  "description": "Oki's management service: the one address the browser opens, /oki/ for setup and system and the rest forwarded to the web connector",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "bin": {
+    "oki-management": "bin/oki-management.js"
+  },
+  "files": [
+    "bin/",
+    "service/",
+    "build/",
+    "oki-management.service"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "prepack": "vite build",
+    "test": "node --test test/*.test.js"
+  },
+  "peerDependencies": {
+    "@rhizogrip/spore": "1.66.0",
+    "@rhizogrip/spore-cli": "1.66.0",
+    "mohdel": "4.11.0"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "^3.0.10",
+    "@sveltejs/kit": "2.55.0",
+    "@sveltejs/vite-plugin-svelte": "^7.0.0",
+    "svelte": "5.55.1",
+    "vite": "^8.0.3"
+  },
+  "license": "AGPL-3.0-only"
+}
