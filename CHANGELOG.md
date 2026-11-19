@@ -2,6 +2,10 @@
 
 What changed in each release of Oki, for the people who use it.
 
+## 0.2.2
+
+- Oki installs on a Windows PC with 4 GB of memory. The installer asked for 8 GB, and refused many PCs sold with 8 GB, which report a little less.
+
 ## 0.2.1
 
 - Oki is free software under the GNU AGPL, version 3 only. The offer of a separate commercial licence is withdrawn.
