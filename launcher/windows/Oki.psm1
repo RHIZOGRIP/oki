@@ -138,7 +138,7 @@ function Test-OkiRequirement {
   $problems = @()
   if ($Build -lt 22000) { $problems += "Oki needs Windows 11; this is Windows build $Build" }
   if ($Architecture -ne 'x64') { $problems += "Oki needs an x86-64 (x64) PC; this one is $Architecture" }
-  if ($MemoryGB -lt 8) { $problems += ('Oki needs 8 GB of memory; this PC has {0:N1} GB' -f $MemoryGB) }
+  if ($MemoryGB -lt 3.5) { $problems += ('Oki needs 4 GB of memory; this PC has {0:N1} GB' -f $MemoryGB) }
   if ($FreeGB -lt 10) { $problems += ('Oki needs 10 GB free on the drive of your user profile; it has {0:N1} GB' -f $FreeGB) }
   if (-not $Virtualization) { $problems += 'hardware virtualization is off: turn it on in the PC firmware (BIOS/UEFI) settings, often named Intel VT-x, AMD-V or SVM' }
   $wslAction = $null

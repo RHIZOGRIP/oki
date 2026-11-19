@@ -188,7 +188,7 @@ Describe 'Test-OkiRequirement' {
   }
   It 'names each thing that is missing' {
     $bad = $pc.Clone()
-    $bad.Build = 19045; $bad.Architecture = 'arm64'; $bad.MemoryGB = 4; $bad.FreeGB = 3.2; $bad.Virtualization = $false
+    $bad.Build = 19045; $bad.Architecture = 'arm64'; $bad.MemoryGB = 2; $bad.FreeGB = 3.2; $bad.Virtualization = $false
     $problems = @((Test-OkiRequirement @bad).Problems)
     $problems.Count | Should -Be 5
     $problems[0] | Should -BeLike '*Windows 11*19045*'

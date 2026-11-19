@@ -1,7 +1,7 @@
 # Windows, with WSL 2
 
 Oki in a WSL 2 distribution of the Windows account that installs it, `Oki-<release>`, made from Debian's
-WSL image and provisioned with the release. Needs Windows 11 on an x86-64 PC, 8 GB of memory, 10 GB free
+WSL image and provisioned with the release. Needs Windows 11 on an x86-64 PC, 4 GB of memory, 10 GB free
 on the drive of the user profile, and hardware virtualization; the installer installs WSL when it is
 missing, the one step that asks for an administrator. Nothing here is compiled: the installer and the
 launcher are Windows PowerShell 5.1 scripts, and the launcher's icon is WinForms, both part of Windows.
